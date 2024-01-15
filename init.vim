@@ -12,7 +12,7 @@ set autoindent              " indent a new line the same amount as the line just
 set number                  " add line numbers
 set relativenumber                  " add line numbers
 set wildmode=longest,list   " get bash-like tab completions
-set cc=120                  " set an 80 column border for good coding style
+set cc=80                  " set an 80 column border for good coding style
 filetype plugin indent on   "allow auto-indenting depending on file type
 syntax on                   " syntax highlighting
 set mouse=a                 " enable mouse click
@@ -25,11 +25,26 @@ set termguicolors
 " set spell                 " enable spell check (may need to download language package)
 " set noswapfile            " disable creating swap file
 " set backupdir=~/.cache/vim  Directory to store backup files.
+set shell=/usr/bin/fish
 
+nnoremap mn <cmd>VimtexCompile<cr>
 nnoremap tt <cmd>NvimTreeToggle<cr>
 nnoremap mm <cmd>TodoTrouble<cr>
 nnoremap ;; <cmd>TroubleToggle<cr>
 nnoremap ,, <cmd>TroubleToggle document_diagnostics<cr>
+nnoremap ff <cmd>Telescope find_files<cr>
+
+ "Use ctrl-[hjkl] to select the active split!
+"nmap <silent> <c-k> :wincmd k<CR>
+"nmap <silent> <c-j> :wincmd j<CR>
+"nmap <silent> <c-h> :wincmd h<CR>
+"nmap <silent> <c-l> :wincmd l<CR>
+
+nnoremap <silent> <C-h> <Cmd>NvimTmuxNavigateLeft<CR>
+nnoremap <silent> <C-j> <Cmd>NvimTmuxNavigateDown<CR>
+nnoremap <silent> <C-k> <Cmd>NvimTmuxNavigateUp<CR>
+nnoremap <silent> <C-l> <Cmd>NvimTmuxNavigateRight<CR>
+nnoremap <silent> <C-\> <Cmd>NvimTmuxNavigateLastActive<CR> nnoremap <silent> <C-Space> <Cmd>NvimTmuxNavigateNext<CR>
 
 call plug#begin("~/.local/share/nvim/plugged")
  Plug 'Mofiqul/dracula.nvim'
@@ -51,11 +66,117 @@ call plug#begin("~/.local/share/nvim/plugged")
  Plug 'folke/trouble.nvim'
  Plug 'folke/lsp-colors.nvim'
  Plug 'folke/todo-comments.nvim'
-" Plug 'lervag/vimtex'
+ Plug 'lervag/vimtex'
  Plug 'dense-analysis/neural'
  Plug 'nvim-telescope/telescope.nvim'
+ Plug 'hrsh7th/cmp-nvim-lsp'
+ Plug 'hrsh7th/cmp-buffer'
+ Plug 'hrsh7th/cmp-path'
+ Plug 'hrsh7th/cmp-cmdline'
+ Plug 'hrsh7th/nvim-cmp'
+ Plug 'quangnguyen30192/cmp-nvim-ultisnips'
+ Plug 'alexghergh/nvim-tmux-navigation'
+ Plug 'tpope/vim-obsession'
+" Plug 'BalderHolst/matlab.nvim'
+" Plug 'daeyun/vim-matlab'
+ Plug 'MdGroot/vim-matlab'
 call plug#end()
 
+
+
+function! UploadArduino(board_type)
+    execute '!tmux send-keys -t ArduinoDev:0.1 "/home/maarten/devel/upload_and_monitor.sh ' . a:board_type . '" C-m'
+endfunction
+
+command! -nargs=1 UploadArduino call UploadArduino(<f-args>)
+
+
+
+
+
+lua <<EOF
+    require'nvim-tmux-navigation'.setup {
+  --      disable_when_zoomed = true -- defaults to false
+    }
+EOF
+
+lua <<EOF
+  -- Set up nvim-cmp.
+  -- Set up nvim-cmp.
+  local cmp = require'cmp'
+
+  cmp.setup({
+    snippet = {
+      -- REQUIRED - you must specify a snippet engine
+      expand = function(args)
+        -- vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+        -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+        -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+        vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+      end,
+    },
+    window = {
+      -- completion = cmp.config.window.bordered(),
+      -- documentation = cmp.config.window.bordered(),
+    },
+    mapping = cmp.mapping.preset.insert({
+      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.abort(),
+      ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    }),
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+      -- { name = 'vsnip' }, -- For vsnip users.
+      -- { name = 'luasnip' }, -- For luasnip users.
+      { name = 'ultisnips' }, -- For ultisnips users.
+      -- { name = 'snippy' }, -- For snippy users.
+    }, {
+      { name = 'buffer' },
+    })
+  })
+
+  -- Set configuration for specific filetype.
+  cmp.setup.filetype('gitcommit', {
+    sources = cmp.config.sources({
+      { name = 'git' }, -- You can specify the `git` source if [you were installed it](https://github.com/petertriho/cmp-git).
+    }, {
+      { name = 'buffer' },
+    })
+  })
+
+  -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline({ '/', '?' }, {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+      { name = 'buffer' }
+    }
+  })
+
+  -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+      { name = 'path' }
+    }, {
+      { name = 'cmdline' }
+    })
+  })
+
+  -- Set up lspconfig.
+  local capabilities = require('cmp_nvim_lsp').default_capabilities()
+  -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
+  require('lspconfig')['pyright'].setup {
+    capabilities = capabilities
+  }
+  require('lspconfig')['clangd'].setup {
+    capabilities = capabilities
+  }
+  require('lspconfig')['hls'].setup{
+  filetypes = { 'haskell', 'lhaskell', 'cabal' },
+}
+EOF
 
 let g:UltisnipsExpandTrigger="<tab>"
 let g:UltisnipsJumpForwardTrigger="<tab>"
@@ -149,7 +270,7 @@ require("nvim-tree").setup { -- BEGIN_DEFAULT_OPTS
     centralize_selection = false,
     cursorline = true,
     debounce_delay = 15,
-    hide_root_folder = false,
+--    hide_root_folder = false,
     side = "left",
     preserve_window_proportions = false,
     number = false,
@@ -405,6 +526,10 @@ require'nvim-web-devicons'.get_icons()
 
 EOF
 
+
+
+
+
 lua <<EOF
 require('winbar').setup({
     enabled = true,
@@ -493,6 +618,20 @@ EOF
 
 
 lua <<EOF
+    local function obsession_status()
+        return vim.fn['ObsessionStatus']('Obsession', 'Paused')
+    end
+
+    local obsession_component = {
+        provider = obsession_status,
+        hl = {
+            fg = 'green',
+            bg = 'bg',
+            style = 'bold'
+        },
+        right_sep = ' '
+    }
+
 
 local navic = require("nvim-navic")
 
@@ -523,7 +662,6 @@ navic.setup {
         Struct        = "󰌗 ",
         Event         = " ",
         Operator      = "󰆕 ",
-        TypeParameter = "󰊄 ",
     },
     highlight = true,
     separator = " > ",
@@ -532,7 +670,12 @@ navic.setup {
     safe_output = true
 }
 
-require("lspconfig").pyright.setup {
+    on_attach = function(client, bufnr)
+        navic.attach(client, bufnr)
+    end
+
+
+require("lspconfig").hls.setup {
     on_attach = function(client, bufnr)
         navic.attach(client, bufnr)
     end
@@ -548,6 +691,9 @@ local components = {
     active = {},
     inactive = {}
 }
+
+
+
 --
 ---- Insert three sections (left, mid and right) for the active statusline
 table.insert(components.active, {})
@@ -567,7 +713,10 @@ table.insert(components.active[1], {
     end
 })
 
-require("feline").setup()--{components = components})
+table.insert(components.active[2], obsession_component)
+table.insert(components.inactive[2], obsession_component)
+
+  require("feline").setup()
 
 EOF
 
