@@ -12,21 +12,21 @@ set autoindent              " indent a new line the same amount as the line just
 set number                  " add line numbers
 set relativenumber                  " add line numbers
 set wildmode=longest,list   " get bash-like tab completions
-set cc=80                  " set an 80 column border for good coding style
-filetype plugin indent on   "allow auto-indenting depending on file type
+set cc=80                   " set an 80 column border for good coding style
+filetype plugin indent on   " allow auto-indenting depending on file type
 syntax on                   " syntax highlighting
 set mouse=a                 " enable mouse click
 set clipboard=unnamedplus   " using system clipboard
 filetype plugin on
 set cursorline              " highlight current cursorline
 set ttyfast                 " Speed up scrolling in Vim
-inoremap jk <esc>
 set termguicolors
 " set spell                 " enable spell check (may need to download language package)
 " set noswapfile            " disable creating swap file
 " set backupdir=~/.cache/vim  Directory to store backup files.
 set shell=/usr/bin/fish
 
+inoremap jk <esc>
 nnoremap mn <cmd>VimtexCompile<cr>
 nnoremap tt <cmd>NvimTreeToggle<cr>
 nnoremap mm <cmd>TodoTrouble<cr>
@@ -35,28 +35,14 @@ nnoremap ,, <cmd>TroubleToggle document_diagnostics<cr>
 nnoremap ff <cmd>Telescope find_files<cr>
 nnoremap fg <cmd>Telescope live_grep<cr>
 
- "Use ctrl-[hjkl] to select the active split!
-"nmap <silent> <c-k> :wincmd k<CR>
-"nmap <silent> <c-j> :wincmd j<CR>
-"nmap <silent> <c-h> :wincmd h<CR>
-"nmap <silent> <c-l> :wincmd l<CR>
-
 nnoremap <silent> <C-h> <Cmd>NvimTmuxNavigateLeft<CR>
 nnoremap <silent> <C-j> <Cmd>NvimTmuxNavigateDown<CR>
 nnoremap <silent> <C-k> <Cmd>NvimTmuxNavigateUp<CR>
 nnoremap <silent> <C-l> <Cmd>NvimTmuxNavigateRight<CR>
 nnoremap <silent> <C-\> <Cmd>NvimTmuxNavigateLastActive<CR> nnoremap <silent> <C-Space> <Cmd>NvimTmuxNavigateNext<CR>
 
-
 nnoremap <silent> <C-n> <Cmd>bn<CR>
 nnoremap <silent> <C-m> <Cmd>bp<CR>
-
-
-function! DoRemote(arg)
-  UpdateRemotePlugins
-endfunction
-
-
 
 call plug#begin("~/.local/share/nvim/plugged")
  Plug 'Mofiqul/dracula.nvim'
@@ -94,6 +80,10 @@ call plug#begin("~/.local/share/nvim/plugged")
  Plug 'MdGroot/vim-matlab', { 'do': function('DoRemote') }
 call plug#end()
 
+function! DoRemote(arg)
+  UpdateRemotePlugins
+endfunction
+
 let g:matlab_server_launcher = 'tmux' "launch the server in a tmux split
 let g:matlab_auto_mappings = 0 "automatic mappings disabled
 
@@ -102,9 +92,6 @@ function! UploadArduino(board_type)
 endfunction
 
 command! -nargs=1 UploadArduino call UploadArduino(<f-args>)
-
-
-
 
 lua require('nvim_tmux_navigation')
 lua require('nvim_cmp')
@@ -123,7 +110,6 @@ lua require('trouble_conf')
 lua require('lsp_colors_conf')
 lua require('todo_comments_conf')
 
-
 let g:UltisnipsExpandTrigger="<tab>"
 let g:UltisnipsJumpForwardTrigger="<tab>"
 let g:UltisnipsJumpForwardTrigger="<c-tab>"
@@ -136,7 +122,6 @@ let g:vimtex_compiler_latexmk = {
             \}
 set conceallevel=1
 let g:tex_conceal='abdmg'
-
 
 syntax enable
 "colorscheme dracula open new split panes to right and below
