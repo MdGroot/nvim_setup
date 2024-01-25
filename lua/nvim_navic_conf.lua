@@ -35,6 +35,6 @@ navic.setup {
     safe_output = true
 }
 
-    on_attach = function(client, bufnr)
-        navic.attach(client, bufnr)
-    end
+on_attach = function(client, bufnr)
+    navic.attach(client, bufnr)
+end

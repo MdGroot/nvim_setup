@@ -3,9 +3,6 @@ local components = {
     active = {},
     inactive = {}
 }
-
-
-
 --
 ---- Insert three sections (left, mid and right) for the active statusline
 table.insert(components.active, {})
@@ -28,5 +25,5 @@ table.insert(components.active[1], {
 table.insert(components.active[2], obsession_component)
 table.insert(components.inactive[2], obsession_component)
 
-  require("feline").setup()
+require("feline").setup()
 
