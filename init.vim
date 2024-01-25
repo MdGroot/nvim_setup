@@ -33,6 +33,7 @@ nnoremap mm <cmd>TodoTrouble<cr>
 nnoremap ;; <cmd>TroubleToggle<cr>
 nnoremap ,, <cmd>TroubleToggle document_diagnostics<cr>
 nnoremap ff <cmd>Telescope find_files<cr>
+nnoremap fg <cmd>Telescope live_grep<cr>
 
  "Use ctrl-[hjkl] to select the active split!
 "nmap <silent> <c-k> :wincmd k<CR>
@@ -45,6 +46,17 @@ nnoremap <silent> <C-j> <Cmd>NvimTmuxNavigateDown<CR>
 nnoremap <silent> <C-k> <Cmd>NvimTmuxNavigateUp<CR>
 nnoremap <silent> <C-l> <Cmd>NvimTmuxNavigateRight<CR>
 nnoremap <silent> <C-\> <Cmd>NvimTmuxNavigateLastActive<CR> nnoremap <silent> <C-Space> <Cmd>NvimTmuxNavigateNext<CR>
+
+
+nnoremap <silent> <C-n> <Cmd>bn<CR>
+nnoremap <silent> <C-m> <Cmd>bp<CR>
+
+
+function! DoRemote(arg)
+  UpdateRemotePlugins
+endfunction
+
+
 
 call plug#begin("~/.local/share/nvim/plugged")
  Plug 'Mofiqul/dracula.nvim'
@@ -79,10 +91,11 @@ call plug#begin("~/.local/share/nvim/plugged")
  Plug 'tpope/vim-obsession'
 " Plug 'BalderHolst/matlab.nvim'
 " Plug 'daeyun/vim-matlab'
- Plug 'MdGroot/vim-matlab'
+ Plug 'MdGroot/vim-matlab', { 'do': function('DoRemote') }
 call plug#end()
 
-
+let g:matlab_server_launcher = 'tmux' "launch the server in a tmux split
+let g:matlab_auto_mappings = 0 "automatic mappings disabled
 
 function! UploadArduino(board_type)
     execute '!tmux send-keys -t ArduinoDev:0.1 "/home/maarten/devel/upload_and_monitor.sh ' . a:board_type . '" C-m'
