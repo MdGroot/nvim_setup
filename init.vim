@@ -44,6 +44,10 @@ nnoremap <silent> <C-\> <Cmd>NvimTmuxNavigateLastActive<CR> nnoremap <silent> <C
 nnoremap <silent> <C-n> <Cmd>bn<CR>
 nnoremap <silent> <C-m> <Cmd>bp<CR>
 
+function! DoRemote(arg)
+  UpdateRemotePlugins
+endfunction
+
 call plug#begin("~/.local/share/nvim/plugged")
  Plug 'Mofiqul/dracula.nvim'
  Plug 'SirVer/ultisnips'
@@ -79,10 +83,6 @@ call plug#begin("~/.local/share/nvim/plugged")
 " Plug 'daeyun/vim-matlab'
  Plug 'MdGroot/vim-matlab', { 'do': function('DoRemote') }
 call plug#end()
-
-function! DoRemote(arg)
-  UpdateRemotePlugins
-endfunction
 
 let g:matlab_server_launcher = 'tmux' "launch the server in a tmux split
 let g:matlab_auto_mappings = 0 "automatic mappings disabled
