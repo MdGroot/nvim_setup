@@ -13,11 +13,9 @@ set number                  " add line numbers
 set relativenumber                  " add line numbers
 set wildmode=longest,list   " get bash-like tab completions
 set cc=80                   " set an 80 column border for good coding style
-filetype plugin indent on   " allow auto-indenting depending on file type
 syntax on                   " syntax highlighting
 set mouse=a                 " enable mouse click
 set clipboard=unnamedplus   " using system clipboard
-filetype plugin on
 set cursorline              " highlight current cursorline
 set ttyfast                 " Speed up scrolling in Vim
 set termguicolors
@@ -25,6 +23,11 @@ set termguicolors
 " set noswapfile            " disable creating swap file
 " set backupdir=~/.cache/vim  Directory to store backup files.
 set shell=/usr/bin/fish
+set path+=**                " Set the path to include the current directory and all subdirectories
+
+" Configure the include search paths
+set include=^\\s*#\\s*include
+set includeexpr=substitute(v:fname,'^"\\|"$','','g')
 
 inoremap jk <esc>
 nnoremap mn <cmd>VimtexCompile<cr>
@@ -34,15 +37,25 @@ nnoremap ;; <cmd>TroubleToggle<cr>
 nnoremap ,, <cmd>TroubleToggle document_diagnostics<cr>
 nnoremap ff <cmd>Telescope find_files<cr>
 nnoremap fg <cmd>Telescope live_grep<cr>
+nnoremap <silent> gr <cmd>lua require'telescope.builtin'.lsp_references()<cr>
+nnoremap fb <cmd>Telescope buffers<cr>
 
-nnoremap <silent> <C-h> <Cmd>NvimTmuxNavigateLeft<CR>
-nnoremap <silent> <C-j> <Cmd>NvimTmuxNavigateDown<CR>
-nnoremap <silent> <C-k> <Cmd>NvimTmuxNavigateUp<CR>
-nnoremap <silent> <C-l> <Cmd>NvimTmuxNavigateRight<CR>
+nnoremap <silent> <C-H> <Cmd>NvimTmuxNavigateLeft<CR>
+nnoremap <silent> <C-J> <Cmd>NvimTmuxNavigateDown<CR>
+nnoremap <silent> <C-K> <Cmd>NvimTmuxNavigateUp<CR>
+nnoremap <silent> <C-L> <Cmd>NvimTmuxNavigateRight<CR>
 nnoremap <silent> <C-\> <Cmd>NvimTmuxNavigateLastActive<CR> nnoremap <silent> <C-Space> <Cmd>NvimTmuxNavigateNext<CR>
 
-nnoremap <silent> <C-n> <Cmd>bn<CR>
-nnoremap <silent> <C-m> <Cmd>bp<CR>
+nnoremap <silent> <M-;> <Cmd>bn<CR>
+nnoremap <silent> <M-'> <Cmd>bp<CR>
+
+" Enable tag navigation
+set tags=./tags;,tags;
+
+" Key mappings for tag navigation
+nnoremap <silent> gd :tag <C-R>=expand("<cword>")<CR><CR>
+nnoremap <silent> gD :tselect <C-R>=expand("<cword>")<CR><CR>
+nnoremap <silent> <C-]> :tag <C-R>=expand("<cword>")<CR><CR>
 
 function! DoRemote(arg)
   UpdateRemotePlugins
@@ -69,7 +82,7 @@ call plug#begin("~/.local/share/nvim/plugged")
  Plug 'folke/lsp-colors.nvim'
  Plug 'folke/todo-comments.nvim'
  Plug 'lervag/vimtex'
- Plug 'dense-analysis/neural'
+" Plug 'dense-analysis/neural'
  Plug 'nvim-telescope/telescope.nvim'
  Plug 'hrsh7th/cmp-nvim-lsp'
  Plug 'hrsh7th/cmp-buffer'
@@ -82,6 +95,8 @@ call plug#begin("~/.local/share/nvim/plugged")
 " Plug 'BalderHolst/matlab.nvim'
 " Plug 'daeyun/vim-matlab'
  Plug 'MdGroot/vim-matlab', { 'do': function('DoRemote') }
+ "Plug 'daeyun/vim-matlab', { 'do': function('DoRemote') }
+ Plug 'epwalsh/obsidian.nvim'
 call plug#end()
 
 let g:matlab_server_launcher = 'tmux' "launch the server in a tmux split
@@ -93,10 +108,21 @@ endfunction
 
 command! -nargs=1 UploadArduino call UploadArduino(<f-args>)
 
+filetype plugin indent on   " allow auto-indenting depending on file type
+let g:tex_flavor='latex'
+let g:vimtex_view_method='zathura'
+let g:vimtex_quickfix_mode=0
+let g:vimtex_compiler_latexmk = {
+            \ 'build_dir' : 'build',
+            \}
+set conceallevel=1
+let g:tex_conceal='abdmg'
+
+syntax enable
 lua require('nvim_tmux_navigation')
 lua require('nvim_cmp')
 lua require('telescope_conf')
-lua require('neural_conf')
+"lua require('neural_conf')
 lua require('nvim_tree_conf')
 lua require('nvim_web_devicons_conf')
 lua require('winbar_conf')
@@ -109,21 +135,12 @@ lua require('dracula_conf')
 lua require('trouble_conf')
 lua require('lsp_colors_conf')
 lua require('todo_comments_conf')
+lua require('obsidian_nvim_conf')
 
 let g:UltisnipsExpandTrigger="<tab>"
 let g:UltisnipsJumpForwardTrigger="<tab>"
 let g:UltisnipsJumpForwardTrigger="<c-tab>"
 
-let g:tex_flavor='latex'
-let g:vimtex_view_method='zathura'
-let g:vimtex_quickfix_mode=0
-let g:vimtex_compiler_latexmk = {
-            \ 'build_dir' : 'build',
-            \}
-set conceallevel=1
-let g:tex_conceal='abdmg'
-
-syntax enable
 "colorscheme dracula open new split panes to right and below
 set splitright
 set splitbelow
