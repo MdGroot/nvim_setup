@@ -98,6 +98,8 @@ call plug#begin("~/.local/share/nvim/plugged")
  "Plug 'daeyun/vim-matlab', { 'do': function('DoRemote') }
  Plug 'epwalsh/obsidian.nvim'
  Plug 'williamboman/mason.nvim'
+ Plug 'williamboman/mason-lspconfig.nvim'
+ Plug 'chomosuke/typst-preview.nvim', {'tag': 'v1.*'}
 call plug#end()
 
 let g:matlab_server_launcher = 'tmux' "launch the server in a tmux split
@@ -138,6 +140,7 @@ lua require('lsp_colors_conf')
 lua require('todo_comments_conf')
 lua require('obsidian_nvim_conf')
 lua require('mason_conf')
+lua require('typst-preview_conf')
 
 let g:UltisnipsExpandTrigger="<tab>"
 let g:UltisnipsJumpForwardTrigger="<tab>"

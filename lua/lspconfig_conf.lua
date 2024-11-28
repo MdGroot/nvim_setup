@@ -34,3 +34,4 @@ require("lspconfig").clangd.setup {
         buf_set_keymap('n', '<space>f', '<Cmd>lua vim.lsp.buf.formatting()<CR>', opts)
     end
 }
+require("lspconfig").tinymist.setup {}
