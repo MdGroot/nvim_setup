@@ -24,6 +24,7 @@ set termguicolors
 " set backupdir=~/.cache/vim  Directory to store backup files.
 set shell=/usr/bin/fish
 set path+=**                " Set the path to include the current directory and all subdirectories
+let g:python3_host_prog = '/usr/bin/python3'
 
 " Configure the include search paths
 set include=^\\s*#\\s*include
