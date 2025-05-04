@@ -35,16 +35,16 @@ nnoremap mn <cmd>VimtexCompile<cr>
 nnoremap tt <cmd>NvimTreeToggle<cr>
 nnoremap mm <cmd>TodoTrouble<cr>
 nnoremap ;; <cmd>TroubleToggle<cr>
-nnoremap ,, <cmd>TroubleToggle document_diagnostics<cr>
+nnoremap ,, <cmd>Trouble diagnostics toggle<cr>
 nnoremap ff <cmd>Telescope find_files<cr>
 nnoremap fg <cmd>Telescope live_grep<cr>
 nnoremap <silent> gr <cmd>lua require'telescope.builtin'.lsp_references()<cr>
 nnoremap fb <cmd>Telescope buffers<cr>
 
-nnoremap <silent> <C-H> <Cmd>NvimTmuxNavigateLeft<CR>
-nnoremap <silent> <C-J> <Cmd>NvimTmuxNavigateDown<CR>
-nnoremap <silent> <C-K> <Cmd>NvimTmuxNavigateUp<CR>
-nnoremap <silent> <C-L> <Cmd>NvimTmuxNavigateRight<CR>
+nnoremap <silent> <M-h> <Cmd>NvimTmuxNavigateLeft<CR>
+nnoremap <silent> <M-j> <Cmd>NvimTmuxNavigateDown<CR>
+nnoremap <silent> <M-k> <Cmd>NvimTmuxNavigateUp<CR>
+nnoremap <silent> <M-l> <Cmd>NvimTmuxNavigateRight<CR>
 nnoremap <silent> <C-\> <Cmd>NvimTmuxNavigateLastActive<CR> nnoremap <silent> <C-Space> <Cmd>NvimTmuxNavigateNext<CR>
 
 nnoremap <silent> <M-;> <Cmd>bn<CR>
@@ -65,7 +65,7 @@ endfunction
 call plug#begin("~/.local/share/nvim/plugged")
  Plug 'Mofiqul/dracula.nvim'
  Plug 'SirVer/ultisnips'
- Plug 'honza/vim-snippets'
+ "Plug 'honza/vim-snippets'
  Plug 'preservim/nerdcommenter'
  Plug 'mhinz/vim-startify'
  Plug '~/.local/share/nvim/plugged/cif'
@@ -101,6 +101,7 @@ call plug#begin("~/.local/share/nvim/plugged")
  Plug 'williamboman/mason.nvim'
  Plug 'williamboman/mason-lspconfig.nvim'
  Plug 'chomosuke/typst-preview.nvim', {'tag': 'v1.*'}
+ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 call plug#end()
 
 let g:matlab_server_launcher = 'tmux' "launch the server in a tmux split
@@ -142,6 +143,7 @@ lua require('todo_comments_conf')
 lua require('obsidian_nvim_conf')
 lua require('mason_conf')
 lua require('typst-preview_conf')
+lua require('nvim-treesitter_conf')
 
 let g:UltisnipsExpandTrigger="<tab>"
 let g:UltisnipsJumpForwardTrigger="<tab>"

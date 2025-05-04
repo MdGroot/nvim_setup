@@ -35,3 +35,39 @@ require("lspconfig").clangd.setup {
     end
 }
 require("lspconfig").tinymist.setup {}
+
+require('lspconfig').harper_ls.setup {
+ settings = {
+    ["harper-ls"] = {
+      userDictPath = "",
+      fileDictPath = "",
+      linters = {
+        SpellCheck = true,
+        SpelledNumbers = false,
+        AnA = true,
+        SentenceCapitalization = true,
+        UnclosedQuotes = true,
+        WrongQuotes = false,
+        LongSentences = true,
+        RepeatedWords = true,
+        Spaces = true,
+        Matcher = true,
+        CorrectNumberSuffix = true
+      },
+      codeActions = {
+        ForceStable = false
+      },
+      markdown = {
+        IgnoreLinkTitle = false
+      },
+      diagnosticSeverity = "hint",
+      isolateEnglish = false,
+      dialect = "American"
+    }
+  },
+  filetypes = {'typst'},
+}
+
+-- require("nvim-treesitter.configs").setup({
+--   ensure_installed = { "c", "lua", "vim", "typst" , "python"},
+-- })

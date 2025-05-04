@@ -6,13 +6,19 @@ require 'typst-preview'.setup {
   -- Example: open_cmd = 'firefox %s -P typst-preview --class typst-preview'
   open_cmd = nil,
 
+  -- Custom port to open the preview server. Default is random.
+  -- Example: port = 8000
+  port = 8000,
+
+  -- Enable partial rendering or not
+  partial_rendering = true,
   -- Setting this to 'always' will invert black and white in the preview
   -- Setting this to 'auto' will invert depending if the browser has enable
   -- dark mode
   -- Setting this to '{"rest": "<option>","image": "<option>"}' will apply
   -- your choice of color inversion to images and everything else
   -- separately.
-  invert_colors = 'auto',
+  invert_colors = 'never',--auto',
 
   -- Whether the preview will follow the cursor in the source file
   follow_cursor = true,
@@ -21,10 +27,11 @@ require 'typst-preview'.setup {
   -- Setting this will skip the download of the binary by the plugin.
   -- Warning: Be aware that your version might be older than the one
   -- required.
-  dependencies_bin = {
-    ['tinymist'] = nil,
-    ['websocat'] = nil
-  },
+  dependencies_bin = { ['tinymist'] = 'tinymist' },
+--  dependencies_bin = {
+--    ['tinymist'] = nil,
+--    ['websocat'] = nil
+--  },
 
   -- A list of extra arguments (or nil) to be passed to previewer.
   -- For example, extra_args = { "--input=ver=draft", "--ignore-system-fonts" }
