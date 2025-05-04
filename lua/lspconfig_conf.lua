@@ -2,10 +2,22 @@ local function current_working_directory()
     return vim.fn.getcwd()
 end
 
-require("lspconfig").hls.setup {
-    on_attach = function(client, bufnr)
+local navic = require("nvim-navic")
+
+local on_attach = function(client, bufnr)
+    if client.server_capabilities.documentSymbolProvider then
         navic.attach(client, bufnr)
     end
+end
+
+--require("lspconfig").hls.setup {
+--    on_attach = function(client, bufnr)
+--        navic.attach(client, bufnr)
+--    end
+--}
+
+require("lspconfig").hls.setup {
+    on_attach = on_attach--function(client, bufnr)
 }
 
 require("lspconfig").clangd.setup {
@@ -34,7 +46,9 @@ require("lspconfig").clangd.setup {
         buf_set_keymap('n', '<space>f', '<Cmd>lua vim.lsp.buf.formatting()<CR>', opts)
     end
 }
-require("lspconfig").tinymist.setup {}
+require("lspconfig").tinymist.setup {
+    on_attach = on_attach--function(client, bufnr)
+}
 
 require('lspconfig').harper_ls.setup {
  settings = {
