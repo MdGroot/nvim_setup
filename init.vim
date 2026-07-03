@@ -105,11 +105,10 @@ call plug#begin("~/.local/share/nvim/plugged")
 " Plug 'daeyun/vim-matlab'
  Plug 'MdGroot/vim-matlab', { 'do': function('DoRemote') }
  "Plug 'daeyun/vim-matlab', { 'do': function('DoRemote') }
- Plug 'epwalsh/obsidian.nvim'
+ "Plug 'epwalsh/obsidian.nvim'
  Plug 'williamboman/mason.nvim'
  Plug 'williamboman/mason-lspconfig.nvim'
  Plug 'chomosuke/typst-preview.nvim', { 'tag': 'v1.*' }
- "Plug 'nvim-treesitter/nvim-treesitter', { 'do': ':TSUpdate' }
  Plug '3rd/image.nvim'
 " Plug 'benlubas/molten-nvim', { 'do': ':UpdateRemotePlugins' }
 " Plug 'quarto-dev/quarto-nvim'
@@ -164,7 +163,7 @@ lua require('dracula_conf')
 lua require('trouble_conf')
 lua require('lsp_colors_conf')
 lua require('todo_comments_conf')
-lua require('obsidian_nvim_conf')
+"lua require('obsidian_nvim_conf')
 lua require('mason_conf')
 lua require('typst-preview_conf')
 lua require('nvim-treesitter_conf')
