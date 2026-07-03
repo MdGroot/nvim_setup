@@ -18,7 +18,7 @@ require 'typst-preview'.setup {
   -- Setting this to '{"rest": "<option>","image": "<option>"}' will apply
   -- your choice of color inversion to images and everything else
   -- separately.
-  invert_colors = 'never',--auto',
+  invert_colors = 'auto',
 
   -- Whether the preview will follow the cursor in the source file
   follow_cursor = true,
@@ -52,3 +52,28 @@ require 'typst-preview'.setup {
     return path_of_buffer
   end,
 }
+
+-- vim.keymap.set("n", "<localleader>pp", '<Cmd>TypstPreview<CR>', { desc = "open preview", silent = true })
+-- For Typst files
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "typst",
+    callback = function()
+        vim.keymap.set("n", "<localleader>pp", "<Cmd>TypstPreview<CR>", {
+            desc = "Typst: open preview",
+            buffer = true,    -- VERY IMPORTANT: makes it buffer-local
+            silent = true,
+        })
+    end,
+})
+
+-- For Markdown files
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "markdown",
+    callback = function()
+        vim.keymap.set("n", "<localleader>pp", "<Cmd>MarkdownPreview<CR>", {
+            desc = "Markdown: open preview",
+            buffer = true,
+            silent = true,
+        })
+    end,
+})

@@ -63,13 +63,18 @@ cmp.setup.cmdline(':', {
 
 -- Set up lspconfig.
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
+vim.lsp.config('*', { capabilities = capabilities })
 -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
-require('lspconfig')['pyright'].setup {
-    capabilities = capabilities
-}
-require('lspconfig')['clangd'].setup {
-    capabilities = capabilities
-}
-require('lspconfig')['hls'].setup{
-    filetypes = { 'haskell', 'lhaskell', 'cabal' },
-}
+--vim.lsp.config('pyright', {
+----require('lspconfig')['pyright'].setup {
+--    capabilities = capabilities
+--})
+--vim.lsp.config('clangd', {
+----require('lspconfig')['clangd'].setup {
+--    capabilities = capabilities
+--})
+--vim.lsp.config('hls', {
+--    filetypes = { 'haskell', 'lhaskell', 'cabal' },
+--    on_attach = on_attach--function(client, bufnr)
+--})

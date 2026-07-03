@@ -1,0 +1,10 @@
+--require("quarto").activate()
+-- after/ftplugin/markdown.lua
+--local name = vim.api.nvim_buf_get_name(0)
+--if not name:match("%.ipynb$") then
+--  require("quarto").activate()
+--end
+--
+--vim.treesitter.start(0, "markdown")
+--require("quarto").activate()
+--pcall(vim.treesitter.start, 0, "markdown")

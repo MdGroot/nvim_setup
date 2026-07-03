@@ -15,12 +15,17 @@ end
 --        navic.attach(client, bufnr)
 --    end
 --}
-
-require("lspconfig").hls.setup {
+vim.lsp.config('hls', {
+    filetypes = { 'haskell', 'lhaskell', 'cabal' },
     on_attach = on_attach--function(client, bufnr)
-}
+})
+--require("lspconfig").hls.setup {
+--    on_attach = on_attach--function(client, bufnr)
+--}
 
-require("lspconfig").clangd.setup {
+vim.lsp.config('clangd', {
+    filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
+--require("lspconfig").clangd.setup {
     root_dir = current_working_directory,
     on_attach = function(client, bufnr)
         navic.attach(client, bufnr)
@@ -46,11 +51,29 @@ require("lspconfig").clangd.setup {
         buf_set_keymap('n', '<space>f', '<Cmd>lua vim.lsp.buf.formatting()<CR>', opts)
     end
 }
-require("lspconfig").tinymist.setup {
+)
+
+vim.lsp.config('tinymist', {
+--require("lspconfig").tinymist.setup {
     on_attach = on_attach--function(client, bufnr)
 }
+)
 
-require('lspconfig').harper_ls.setup {
+vim.lsp.enable('matlab_ls', {
+    filetypes = {"matlab"},
+    settings = {
+      MATLAB = {
+        indexWorkspace = true,
+        installPath = '/home/maarten/MATLAB/R2024b',
+        matlabConnectionTiming = "onStart",
+        telemetry = true
+      },
+    }
+}
+)
+
+vim.lsp.config('harper_ls', {
+--require('lspconfig').harper_ls.setup {
  settings = {
     ["harper-ls"] = {
       userDictPath = "",
@@ -81,6 +104,7 @@ require('lspconfig').harper_ls.setup {
   },
   filetypes = {'typst'},
 }
+)
 
 vim.diagnostic.config({
         signs = {
