@@ -1,13 +1,37 @@
-local function current_working_directory()
-    return vim.fn.getcwd()
+local function current_working_directory(_, on_dir)
+    on_dir(vim.fn.getcwd())
 end
+
+vim.lsp.log.set_level("OFF")
 
 local navic = require("nvim-navic")
 
-local on_attach = function(client, bufnr)
-    if client.server_capabilities.documentSymbolProvider then
-        navic.attach(client, bufnr)
+local function attach_navic(client, bufnr)
+    if not client.server_capabilities.documentSymbolProvider then
+        return
     end
+
+    navic.attach(client, bufnr)
+
+    local navic_redraw_augroup = vim.api.nvim_create_augroup("navic_redraw_ui", { clear = false })
+    vim.api.nvim_clear_autocmds({
+        buffer = bufnr,
+        group = navic_redraw_augroup,
+    })
+    vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI", "CursorHold" }, {
+        callback = function()
+            vim.schedule(function()
+                pcall(require("winbar.winbar").show_winbar)
+                vim.cmd("redrawstatus")
+            end)
+        end,
+        group = navic_redraw_augroup,
+        buffer = bufnr,
+    })
+end
+
+local on_attach = function(client, bufnr)
+    attach_navic(client, bufnr)
 end
 
 --require("lspconfig").hls.setup {
@@ -24,11 +48,12 @@ vim.lsp.config('hls', {
 --}
 
 vim.lsp.config('clangd', {
+    cmd = { 'clangd', '--log=error' },
     filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
 --require("lspconfig").clangd.setup {
     root_dir = current_working_directory,
     on_attach = function(client, bufnr)
-        navic.attach(client, bufnr)
+        attach_navic(client, bufnr)
         local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
         local opts = { noremap=true, silent=true }
 
@@ -59,7 +84,15 @@ vim.lsp.config('tinymist', {
 }
 )
 
-vim.lsp.enable('matlab_ls', {
+vim.lsp.config('html', {
+    on_attach = on_attach,
+})
+
+vim.lsp.config('cssls', {
+    on_attach = on_attach,
+})
+
+vim.lsp.config('matlab_ls', {
     filetypes = {"matlab"},
     settings = {
       MATLAB = {
@@ -105,6 +138,8 @@ vim.lsp.config('harper_ls', {
   filetypes = {'typst'},
 }
 )
+
+vim.lsp.enable({ 'hls', 'clangd', 'tinymist', 'html', 'cssls', 'matlab_ls', 'harper_ls' })
 
 vim.diagnostic.config({
         signs = {

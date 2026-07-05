@@ -29,7 +29,7 @@ require("mason").setup({
 })
 
 require("mason-lspconfig").setup({
-  ensure_installed = { "tinymist", "harper_ls", "matlab_ls" },
+  ensure_installed = { "html", "cssls", "tinymist", "harper_ls", "matlab_ls" },
   -- easiest: enable all mason-installed servers automatically (default is true)
   automatic_enable = true,
 

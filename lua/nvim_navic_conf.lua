@@ -30,7 +30,7 @@ navic.setup {
         TypeParameter = "󰊄 ",
     },
     lsp = {
-        auto_attach = true,
+        auto_attach = false,
         preference = nil,
     },
     highlight = false,

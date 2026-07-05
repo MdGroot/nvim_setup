@@ -11,3 +11,5 @@ local obsession_component = {
     },
     right_sep = ' '
 }
+
+return obsession_component
