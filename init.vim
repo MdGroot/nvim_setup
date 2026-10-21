@@ -288,3 +288,50 @@ let g:netrw_altv=1
 let g:netrw_winsize=25
 let g:netrw_keepdir=0
 let g:netrw_localcopydircmd='cp -r'
+
+" Target the tmux pane to the right of Neovim
+let g:matlab_tmux_pane = '{right-of}'
+
+function! RunMatlabBuffer() abort
+    " Require a saved MATLAB file
+    if empty(expand('%:p')) || expand('%:e') !=# 'm'
+        echoerr 'Current buffer is not a saved MATLAB file'
+        return
+    endif
+
+    " Save any unsaved changes
+    update
+
+    " Get directory and script name
+    let l:dir = substitute(expand('%:p:h'), "'", "''", 'g')
+    let l:name = expand('%:t:r')
+
+    " Construct MATLAB command
+    let l:cmd = "cd('" . l:dir . "'); " . l:name
+
+    " Send command to MATLAB
+    let l:result = system([
+        \ 'tmux', 'send-keys', '-t', g:matlab_tmux_pane,
+        \ '-l', l:cmd
+        \ ])
+
+    if v:shell_error
+        echoerr 'Could not send command to MATLAB: ' . l:result
+        return
+    endif
+
+    " Execute command
+    let l:result = system([
+        \ 'tmux', 'send-keys', '-t', g:matlab_tmux_pane, 'Enter'
+        \ ])
+
+    if v:shell_error
+        echoerr 'Could not execute MATLAB command: ' . l:result
+    endif
+endfunction
+
+augroup MatlabRunFile
+    autocmd!
+    autocmd FileType matlab nnoremap <buffer> <silent> <localleader>r <Cmd>call RunMatlabBuffer()<CR>
+    autocmd FileType matlab nnoremap <buffer> <silent> <localleader>o <Cmd>MatlabLaunchServer<CR>
+augroup END

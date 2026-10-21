@@ -19,6 +19,7 @@ ts.install({
   "html",
   "lua",
   "markdown",
+  "matlab",
   "markdown_inline",
   "python",
   "query",
@@ -29,7 +30,7 @@ ts.install({
 })
 
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "c", "css", "html", "lua", "markdown", "python", "r", "vim", "typst" },
+  pattern = { "c", "css", "html", "lua", "matlab", "markdown", "python", "r", "vim", "typst" },
   callback = function(args)
     pcall(vim.treesitter.start, args.buf)
   end,

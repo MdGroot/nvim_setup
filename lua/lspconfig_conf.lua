@@ -139,6 +139,20 @@ vim.lsp.config('harper_ls', {
 }
 )
 
+vim.api.nvim_create_autocmd('LspAttach', {
+    callback = function(ev)
+        local client = vim.lsp.get_client_by_id(ev.data.client_id)
+
+        if client and client:supports_method('textDocument/definition') then
+            vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {
+                buffer = ev.buf,
+                silent = true,
+                desc = 'Go to definition (LSP)',
+            })
+        end 
+    end,
+})
+
 vim.lsp.enable({ 'hls', 'clangd', 'tinymist', 'html', 'cssls', 'matlab_ls', 'harper_ls' })
 
 vim.diagnostic.config({
